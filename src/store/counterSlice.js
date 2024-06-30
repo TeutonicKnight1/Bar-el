@@ -1,37 +1,54 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  Cheshskoe: 0,
-  Blanch: 0,
-  Chips: 0,
-  SucharikiSouce: 0,
-  Suchariki: 0,
-  setOnTwo: 0,
-  setOnFour: 0,
-  setOnSix: 0,
+  points: {},
 };
+
+const countSlice = [
+  {
+    name: "Cheshskoe",
+    price: 150,
+    type: "Beer",
+    initialState,
+  },
+];
 
 const counterSlice = createSlice({
   name: "counter",
   initialState,
   reducers: {
     nullification: (state) => {
-      state.Cheshskoe = 0;
-      state.Blanch = 0;
-      state.Chips = 0;
-      state.SucharikiSouce = 0;
-      state.Suchariki = 0;
-      state.setOnTwo = 0;
-      state.setOnFour = 0;
-      state.setOnSix = 0;
+      if (state.points.length > 0) {
+        state.points.forEach((point) => {
+          point.value = 0;
+        });
+      }
     },
 
     increment: (state, action) => {
-      state.value += action.payload;
+      const pointKey = action.payload.key;
+
+      if (state.points[pointKey]) {
+        state.points[pointKey] = state.points[pointKey] + 1;
+      } else {
+        state.points = {
+          ...state.points,
+          [pointKey]: 1,
+        };
+      }
     },
 
     decrement: (state, action) => {
-      state.value -= action.payload;
+      const pointKey = action.payload.key;
+
+      if (state.points[pointKey]) {
+        state.points[pointKey] = state.points[pointKey] - 1;
+      } else {
+        state.points = {
+          ...state.points,
+          [pointKey]: 1,
+        };
+      }
     },
   },
 });

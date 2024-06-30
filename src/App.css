@@ -4,6 +4,7 @@
 }
 
 .main_page {
+  padding: 10px;
   display: flex;
   flex-direction: row;
   justify-self: center;

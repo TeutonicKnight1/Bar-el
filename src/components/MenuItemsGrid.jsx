@@ -1,33 +1,37 @@
-import { Grid, Typography, Paper } from "@mui/material";
+import { Grid, Typography, Paper, Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { increment } from "../store/counterSlice";
-const MenuItemsGrid = ({}) => {
-  const dispatch = useDispatch();
 
+const data = ["Чешское", "Бланш", "Сет на 2", "Сет на 4", "Сет на 6"];
+
+const ElementGrid = ({ text }) => {
+  const dispatch = useDispatch();
   function addToCart() {
-    dispatch(increment());
+    dispatch(increment({ key: text }));
     console.log(1);
   }
 
+  return (
+    <Paper sx={{ padding: "10px" }}>
+      <Button
+        onClick={addToCart}
+        sx={{ width: "100%", color: "black", fontSize: "20px" }}
+      >
+        {text}
+      </Button>
+    </Paper>
+  );
+};
 
+const MenuItemsGrid = ({}) => {
   return (
     <div className="menu__grid">
-      <Grid container spacing={2} sx={{ margin: "10px" }}>
-        <Grid item xs={4}>
-          <Paper sx={{ p: 2 }} onClick={addToCart}>
-            <Typography variant="h5">Чешское</Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={4}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h5">Бланш</Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={8}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h5">Сет на 2</Typography>
-          </Paper>
-        </Grid>
+      <Grid container spacing={2} sx={{marginTop: "10px", marginBottom: "10px"}}>
+        {data.map((text) => (
+          <Grid key={text} item xs={4}>
+            <ElementGrid text={text} />
+          </Grid>
+        ))}
       </Grid>
     </div>
   );
