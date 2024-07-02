@@ -1,9 +1,11 @@
 import "./App.css";
 
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import ChangeCartCounter from "./UI/ChangeCartCounter";
 import { Button, Typography } from "@mui/material";
 import OrderTableSimple from "./components/OrderTableSimple";
+import MenuItemsGrid from "./components/MenuItemsGrid";
 
 function App() {
   const [cheshskoeCount, setCheshskoeCount] = useState(0);
@@ -11,24 +13,28 @@ function App() {
   const [purchaseNumber, setPurchaseNumber] = useState(0);
   const [finalProfit, setFinalProfit] = useState([0, 0]);
   const [cart, setCart] = useState([]);
-  const [price, setPrice] = useState({
-    bar: {
-      beer: {
-        Cheshskoe: 150,
-        Blanch: 190,
-      },
-      snacks: {
-        Chips: 115,
-        SucharikiSouce: 75,
-        Suchariki: 50,
-      },
-    },
-    kitchen: {
-      setOnTwo: 400,
-      setOnFour: 600,
-      setOnSix: 1000,
-    },
-  });
+
+  console.log(useSelector((state) => state));
+  const prices = useSelector((state) => state.menu.prices);
+  const netPrices = useSelector((state) => state.menu.netPrices);
+  // const [prices, setprices] = useState({
+  //   bar: {
+  //     beer: {
+  //       Cheshskoe: 150,
+  //       Blanch: 190,
+  //     },
+  //     snacks: {
+  //       Chips: 115,
+  //       SucharikiSouce: 75,
+  //       Suchariki: 50,
+  //     },
+  //   },
+  //   kitchen: {
+  //     setOnTwo: 400,
+  //     setOnFour: 600,
+  //     setOnSix: 1000,
+  //   },
+  // });
 
   const [netPrice, setNetPrice] = useState({
     bar: {
@@ -64,7 +70,7 @@ function App() {
           id: purchaseNumber,
           name: "Cheshskoe",
           count: cheshskoeCount,
-          price: price.bar.beer.Cheshskoe,
+          price: prices.bar.beer.Cheshskoe,
           netPrice: netPrice.bar.beer.Cheshskoe,
         },
       ]);
@@ -77,7 +83,7 @@ function App() {
           id: purchaseNumber + 1,
           name: "Blanch",
           count: blanchCount,
-          price: price.bar.beer.Blanch,
+          price: prices.bar.beer.Blanch,
           netPrice: netPrice.bar.beer.Blanch,
         },
       ]);
@@ -116,6 +122,8 @@ function App() {
           </div>
 
           {/* <button className="button" onClick={() => console.log(count)}>вывод</button> */}
+
+          <MenuItemsGrid />
 
           <Button variant="contained" onClick={addToCart}>
             Add to cart
