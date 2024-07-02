@@ -9,7 +9,7 @@ function App() {
   const [cheshskoeCount, setCheshskoeCount] = useState(0);
   const [blanchCount, setBlanchCount] = useState(0);
   const [purchaseNumber, setPurchaseNumber] = useState(0);
-  const [finalProfit, setFinalProfit] = useState([0,0]);
+  const [finalProfit, setFinalProfit] = useState([0, 0]);
   const [cart, setCart] = useState([]);
   const [price, setPrice] = useState({
     bar: {
@@ -49,6 +49,13 @@ function App() {
     },
   });
 
+  const finalProfitCount = () => {
+    setFinalProfit(
+      [cart.reduce((acc, el) => acc + el.price * el.count, 0)],
+      [cart.reduce((acc, el) => acc + el.netPrice * el.count, 0)]
+    );
+  };
+
   function addToCart() {
     if (cheshskoeCount > 0) {
       setCart((prev) => [
@@ -61,9 +68,7 @@ function App() {
           netPrice: netPrice.bar.beer.Cheshskoe,
         },
       ]);
-
       setPurchaseNumber((prev) => prev + 1);
-      console.log(purchaseNumber);
     }
     if (blanchCount > 0) {
       setCart((prev) => [
@@ -76,37 +81,21 @@ function App() {
           netPrice: netPrice.bar.beer.Blanch,
         },
       ]);
-
       setPurchaseNumber((prev) => prev + 1);
-      console.log(purchaseNumber);
     }
 
+    finalProfitCount();
     setCheshskoeCount(0);
     setBlanchCount(0);
-
-    console.log(cart);
   }
 
   return (
     <div>
       <div className="main_page">
         <div className="prices">
-          <h1>Bar</h1>
-          <h2>Price</h2>
-          <p>Cheshskoe: {price.bar.beer.Cheshskoe}</p>
-          <p>Chips: {price.bar.snacks.Chips}</p>
-          <h2>Net price</h2>
-          <p>Cheshskoe: {netPrice.bar.beer.Cheshskoe}</p>
-          <p>Chips: {netPrice.bar.snacks.Chips}</p>
-          <h1>Kitchen</h1>
-          <h2>Price</h2>
-          <p>SetOnTwo: {price.kitchen.setOnTwo}</p>
-          <p>SetOnFour: {price.kitchen.setOnFour}</p>
-          <p>SetOnSix: {price.kitchen.setOnSix}</p>
-          <h2>Net price</h2>
-          <p>SetOnTwo: {netPrice.kitchen.setOnTwo}</p>
-          <p>SetOnFour: {netPrice.kitchen.setOnFour}</p>
-          <p>SetOnSix: {netPrice.kitchen.setOnSix}</p>
+          <Typography variant="h4" gutterBottom>
+            Цены:{" "}
+          </Typography>
         </div>
         <div className="input_purchase">
           <div className="cheshskoe_form">
@@ -135,8 +124,12 @@ function App() {
       </div>
       <OrderTableSimple rows={cart} />
       <div>
-        <h1>Итоговый доход: {cart.reduce((acc, el) => acc + el.price * el.count, 0)}</h1>
-        <h1>Итоговая прибыль: {cart.reduce((acc, el) => acc + el.netPrice * el.count, 0)}</h1>
+        <h1>
+          Итоговый доход:{finalProfit[0]}
+        </h1>
+        <h1>
+          Итоговая прибыль:{finalProfit[1]}
+        </h1>
       </div>
     </div>
   );
