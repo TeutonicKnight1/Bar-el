@@ -1,0 +1,45 @@
+@import '../../styles/colors.scss';
+
+.addToCartButton {
+  width: 230px;
+  height: 52px;
+  border: 1px solid $dark-gray;
+  border-radius: 10px;
+  background-color: transparent;
+}
+
+.changeCountContainer {
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  
+  border: 1px solid $dark-gray;
+  border-radius: 10px;
+  background-color: transparent;
+
+  .changeCountDownButton {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: transparent;
+  }
+
+  .changeCountUpButton {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: transparent;
+  }
+
+  .p {
+    font-size: 22px;
+    margin: auto 15px;
+  }
+
+  .img {
+    margin: 10px 12px;
+    width: 55%;
+    height: 55%;
+  }
+}
