@@ -8,20 +8,28 @@ import ChangeCartCounter from "./UI/ChangeCartCounter";
 import MenuItemsGrid from "./components/MenuItemsGrid";
 import OrderTableSimple from "./components/OrderTableSimple";
 
+import { getMenu, getOrders, userLogin } from "./axios/axios";
 
 import { addToCart } from "./store/cartSlice";
-import { addOrder } from "./store/activeOrdersSlice";
 import { nullification } from "./store/counterSlice";
 import { setPrices, setNetPrices } from "./store/menuSlice";
 
 import data from "./data";
 
-function createDataOrder(id, name, count, price, netPrice) {
-  return { id, name, count, price, netPrice };
-}
-
 function App() {
   useEffect(() => {
+    getMenu().then((data) => {
+      console.log(data);
+    });
+
+    getOrders().then((data) => {
+      console.log(data);
+    });
+
+    userLogin("akramSobirov1228", "12346").then((data) => {
+      console.log(data);
+    });
+
     dispatch(setPrices(data.menu.prices));
     dispatch(setNetPrices(data.menu.netPrices));
   }, []);
@@ -84,17 +92,19 @@ function App() {
             <Typography variant="h4" gutterBottom>
               Blanch:
             </Typography>
+            <ChangeCartCounter count={blanchCount} callback={setBlanchCount} />
           </div>
 
-
           {/* <button className="button" onClick={() => console.log(count)}>вывод</button> */}
-
 
           <div className="cheshskoe_form">
             <Typography variant="h4" gutterBottom>
               Стол номер:
             </Typography>
-            <ChangeCartCounter count={numberOfTable} callback={setNumberOfTable} />
+            <ChangeCartCounter
+              count={numberOfTable}
+              callback={setNumberOfTable}
+            />
           </div>
           <MenuItemsGrid />
           <Button variant="contained" onClick={handleAddToCart}>
