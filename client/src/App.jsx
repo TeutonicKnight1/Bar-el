@@ -8,27 +8,27 @@ import ChangeCartCounter from "./UI/ChangeCartCounter";
 import MenuItemsGrid from "./components/MenuItemsGrid";
 import OrderTableSimple from "./components/OrderTableSimple";
 
-import { getMenu, getOrders, userLogin } from "./axios/axios";
+//import { getMenu, getOrders, userLogin } from "./axios/axios";
 
 import { addToCart } from "./store/cartSlice";
-import { nullification } from "./store/counterSlice";
+import { nullification, increment, decrement } from "./store/counterSlice";
 import { setPrices, setNetPrices } from "./store/menuSlice";
 
 import data from "./data";
 
 function App() {
   useEffect(() => {
-    getMenu().then((data) => {
-      console.log(data);
-    });
+    // getMenu().then((data) => {
+    //   console.log(data);
+    // });
 
-    getOrders().then((data) => {
-      console.log(data);
-    });
+    // getOrders().then((data) => {
+    //   console.log(data);
+    // });
 
-    userLogin("akramSobirov1228", "12346").then((data) => {
-      console.log(data);
-    });
+    // userLogin("akramSobirov1228", "12346").then((data) => {
+    //   console.log(data);
+    // });
 
     dispatch(setPrices(data.menu.prices));
     dispatch(setNetPrices(data.menu.netPrices));
@@ -41,8 +41,38 @@ function App() {
   const [finalProfit, setFinalProfit] = useState([0, 0]);
   const [numberOfTable, setNumberOfTable] = useState(1);
 
-  const [cheshskoeCount, setCheshskoeCount] = useState(0);
-  const [blanchCount, setBlanchCount] = useState(0);
+  const [counter, setCounter] = useState(() => {
+    let obj = {};
+    Object.keys(data.menu.prices).forEach((key) => {
+      obj[key] = 0;
+    });
+    console.log(obj);
+    return obj;
+  });
+
+  const handleCounter = (key, action) => {
+    let newCounter = {};
+    setCounter((prevCounters) => {
+      if (action === "increment") {
+        newCounter = { ...prevCounters, [key]: prevCounters[key] + 1 };
+        dispatch(increment({ key }));
+      } else if (action === "decrement") {
+        newCounter = { ...prevCounters, [key]: prevCounters[key] - 1 };
+        dispatch(decrement({ key }));
+      }
+      return newCounter;
+    });
+  };
+
+  function nullificationCounter() {
+    setCounter(() => {
+      let obj = {};
+      Object.keys(data.menu.prices).forEach((key) => {
+        obj[key] = 0;
+      });
+      return obj;
+    });
+  }
 
   useEffect(() => {
     //console.log(countPoints);
@@ -66,6 +96,7 @@ function App() {
   function handleAddToCart() {
     dispatch(addToCart({ keysForUpdate: countPoints, numberOfTable }));
     dispatch(nullification());
+    nullificationCounter();
     handleFinalProfit();
   }
 
@@ -80,25 +111,6 @@ function App() {
         <div className="input_purchase">
           <div className="cheshskoe_form">
             <Typography variant="h4" gutterBottom>
-              Cheshskoe:{" "}
-            </Typography>
-            <ChangeCartCounter
-              count={cheshskoeCount}
-              callback={setCheshskoeCount}
-            />
-          </div>
-
-          <div className="cheshskoe_form">
-            <Typography variant="h4" gutterBottom>
-              Blanch:
-            </Typography>
-            <ChangeCartCounter count={blanchCount} callback={setBlanchCount} />
-          </div>
-
-          {/* <button className="button" onClick={() => console.log(count)}>вывод</button> */}
-
-          <div className="cheshskoe_form">
-            <Typography variant="h4" gutterBottom>
               Стол номер:
             </Typography>
             <ChangeCartCounter
@@ -106,7 +118,7 @@ function App() {
               callback={setNumberOfTable}
             />
           </div>
-          <MenuItemsGrid />
+          <MenuItemsGrid callback={handleCounter} counter={counter} />
           <Button variant="contained" onClick={handleAddToCart}>
             Add to cart
           </Button>

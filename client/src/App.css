@@ -15,13 +15,14 @@
 }
 
 .input_purchase {
-  width: 50%;
+  /* width: 50%;  */
 
   .cheshskoe_form {
     display: flex;
     justify-content: start;
   }
 }
+
 
 
 

@@ -1,50 +1,44 @@
-import { Grid, Paper, Button } from "@mui/material";
+import { Grid } from "@mui/material";
 
-import { increment } from "../store/counterSlice";
+import { useSelector } from "react-redux";
 
-import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
+
+import ElementMenuGrid from "./ElementMenuGrid";
 
 import data from "../data";
 
-const ElementGrid = ({ text }) => {
-  const dispatch = useDispatch();
-  function addToCart() {
-    dispatch(increment({ key: text }));
-  }
-
-  return (
-    <Paper >
-      <Button
-        onClick={addToCart}
-        sx={{ width: "100%", color: "black", fontSize: "20px" }}
-      >
-        {text}
-      </Button>
-    </Paper>
-  );
-};
-
-ElementGrid.propTypes = {
-  text: PropTypes.string,
-};
-
-const MenuItemsGrid = () => {
+const MenuItemsGrid = ({ callback, counter }) => {
+  const menu = useSelector((state) => state.menu) || data.menu;
   return (
     <div className="menu__grid">
       <Grid
         container
-        spacing={2}
+        spacing={1}
         sx={{ marginTop: "10px", marginBottom: "10px" }}
       >
-        {Object.keys(data.menu.prices).map((key) => (
-          <Paper key={key} sx={{ margin: "5px" }}>
-            <ElementGrid text={key} />
-          </Paper>
+        {Object.keys(menu.prices).map((key) => (
+          <Grid key={key} item xs={0} md={3}>
+            <ElementMenuGrid
+              key={key}
+              image={
+                "https://www.nice-beer.ru/wp-content/uploads/2020/03/cheshskoe-barnoe_keg.jpg"
+              }
+              text={key}
+              price={menu.prices[key]}
+              callback={callback}
+              counter={counter[key]}
+            />
+          </Grid>
         ))}
       </Grid>
     </div>
   );
+};
+
+MenuItemsGrid.propTypes = {
+  callback: PropTypes.func.isRequired,
+  counter: PropTypes.object.isRequired,
 };
 
 export default MenuItemsGrid;

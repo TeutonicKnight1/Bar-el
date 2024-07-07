@@ -1,16 +1,18 @@
+
+
 import classes from "./moduleSCSS/addToCartButton.module.scss";
 import plusIcon from "../assets/plusIcon.png";
 import minusIcon from "../assets/minusIcon.png";
 
-function ChangeCartCounter({ count, callback }) {
+function ChangeCartCounterMenu({ count, onIncrement, onDecrement }) {
   const handleClickPlus = () => {
-    callback(count + 1);
+    onIncrement();
   };
 
   const handleClickMinus = () => {
     if (count - 1 < 0) return;
 
-    callback(count - 1);
+    onDecrement();
   };
   return (
     <>
@@ -35,4 +37,4 @@ function ChangeCartCounter({ count, callback }) {
   );
 }
 
-export default ChangeCartCounter;
+export default ChangeCartCounterMenu;
