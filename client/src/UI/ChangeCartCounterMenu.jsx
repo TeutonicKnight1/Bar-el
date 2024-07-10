@@ -1,6 +1,4 @@
-
-
-import classes from "./moduleSCSS/addToCartButton.module.scss";
+import styles from './moduleSCSS/addToCartButton.module.scss';
 import plusIcon from "../assets/plusIcon.png";
 import minusIcon from "../assets/minusIcon.png";
 
@@ -10,26 +8,25 @@ function ChangeCartCounterMenu({ count, onIncrement, onDecrement }) {
   };
 
   const handleClickMinus = () => {
-    if (count - 1 < 0) return;
-
+    //if (count - 1 < 0) return;
     onDecrement();
   };
   return (
     <>
       <div className="cart__element__counter">
-        <div className={classes.changeCountContainer}>
+        <div className={styles.changeCountContainer}>
           <button
-            className={classes.changeCountUpButton}
+            className={styles.changeCountUpButton}
             onClick={handleClickPlus}
           >
-            <img src={plusIcon} className={classes.img} />
+            <img src={plusIcon} className={styles.img} />
           </button>
-          <p className={classes.p}>{count}</p>
+          <p className={styles.p}>{count}</p>
           <button
-            className={classes.changeCountDownButton}
+            className={styles.changeCountDownButton}
             onClick={handleClickMinus}
           >
-            <img src={minusIcon} className={classes.img} />
+            <img src={minusIcon} className={styles.img} />
           </button>
         </div>
       </div>

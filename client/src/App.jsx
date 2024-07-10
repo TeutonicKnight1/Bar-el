@@ -12,41 +12,31 @@ import OrderTableSimple from "./components/OrderTableSimple";
 
 import { addToCart } from "./store/cartSlice";
 import { nullification, increment, decrement } from "./store/counterSlice";
-import { setPrices, setNetPrices } from "./store/menuSlice";
+
+import { fetchMenu } from "./store/menuSlice";
 
 import data from "./data";
 
 function App() {
-  useEffect(() => {
-    // getMenu().then((data) => {
-    //   console.log(data);
-    // });
-
-    // getOrders().then((data) => {
-    //   console.log(data);
-    // });
-
-    // userLogin("akramSobirov1228", "12346").then((data) => {
-    //   console.log(data);
-    // });
-
-    dispatch(setPrices(data.menu.prices));
-    dispatch(setNetPrices(data.menu.netPrices));
-  }, []);
-
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchMenu());
+  }, [dispatch]);
+
   const countPoints = useSelector((state) => state.counter.points);
-  const menu = useSelector((state) => state.menu);
+  const menu = useSelector((state) => state.menu.items);
+  console.log(menu);
+  const cart = useSelector((state) => state.cart.cart);
 
   const [finalProfit, setFinalProfit] = useState([0, 0]);
   const [numberOfTable, setNumberOfTable] = useState(1);
 
   const [counter, setCounter] = useState(() => {
     let obj = {};
+    console.log(data.menu.prices);
     Object.keys(data.menu.prices).forEach((key) => {
       obj[key] = 0;
-    });
-    console.log(obj);
+    })
     return obj;
   });
 
@@ -75,39 +65,29 @@ function App() {
   }
 
   useEffect(() => {
-    //console.log(countPoints);
-  }, [countPoints]);
-
-  function handleFinalProfit() {
     let sumPrices = 0;
     let sumNetPrices = 0;
 
-    Object.keys(countPoints).forEach((key) => {
-      if (menu.prices[key]) {
-        sumPrices += menu.prices[key] * countPoints[key];
-        sumNetPrices += menu.netPrices[key] * countPoints[key];
-      }
-    });
+    Object.keys(cart).forEach((key) => {
+      Object.keys(cart[key]).forEach((key2) => {
+        sumPrices += cart[key][key2] * data.menu.prices[key2];
+        sumNetPrices += cart[key][key2] * data.menu.netPrices[key2];
+      })
+    })
     sumNetPrices = sumPrices - sumNetPrices;
 
     setFinalProfit([sumPrices, sumNetPrices]);
-  }
+  }, [cart, data.menu.prices, data.menu.netPrices]);
 
   function handleAddToCart() {
     dispatch(addToCart({ keysForUpdate: countPoints, numberOfTable }));
     dispatch(nullification());
     nullificationCounter();
-    handleFinalProfit();
   }
 
   return (
     <div>
       <div className="main_page">
-        <div className="prices">
-          <Typography variant="h4" gutterBottom>
-            Цены:{" "}
-          </Typography>
-        </div>
         <div className="input_purchase">
           <div className="cheshskoe_form">
             <Typography variant="h4" gutterBottom>

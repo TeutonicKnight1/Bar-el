@@ -9,7 +9,7 @@ import ElementMenuGrid from "./ElementMenuGrid";
 import data from "../data";
 
 const MenuItemsGrid = ({ callback, counter }) => {
-  const menu = useSelector((state) => state.menu) || data.menu;
+  const menu = useSelector((state) => state.menu);
   return (
     <div className="menu__grid">
       <Grid

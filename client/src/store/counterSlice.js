@@ -27,15 +27,10 @@ const counterSlice = createSlice({
 
     decrement: (state, action) => {
       const pointKey = action.payload.key;
-
-      if (state.points[pointKey]) {
-        state.points[pointKey] = state.points[pointKey] - 1;
-      } else {
-        state.points = {
-          ...state.points,
-          [pointKey]: 1,
-        };
-      }
+      state.points = {
+        ...state.points,
+        [pointKey]: (state.points[pointKey] || 0) - 1,
+      };
     },
   },
 });

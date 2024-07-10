@@ -10,13 +10,7 @@
   justify-self: center;
 }
 
-.prices {
-  width: 50%;
-}
-
 .input_purchase {
-  /* width: 50%;  */
-
   .cheshskoe_form {
     display: flex;
     justify-content: start;

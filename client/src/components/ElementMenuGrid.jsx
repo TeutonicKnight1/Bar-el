@@ -19,6 +19,7 @@ const ElementMenuGrid = ({ text, image, price, counter, callback }) => {
   }
 
   function handleDecrement() {
+    
     setMemoCount((prevCount) => {
       const newCount = prevCount - 1;
       return newCount;

@@ -10,18 +10,19 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const { keysForUpdate, numberOfTable } = action.payload;
-
       if (state.cart[numberOfTable]) {
-        console.log(keysForUpdate);
         Object.keys(keysForUpdate).forEach((key) => {
           if (state.cart[numberOfTable][key]) {
             state.cart[numberOfTable][key] += keysForUpdate[key];
           } else {
             state.cart[numberOfTable][key] = keysForUpdate[key];
           }
+
+          if (state.cart[numberOfTable][key] === 0) {
+            delete state.cart[numberOfTable][key];
+          }
         });
       } else {
-        console.log(2);
         state.cart[numberOfTable] = keysForUpdate;
       }
     },

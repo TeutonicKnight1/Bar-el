@@ -10,8 +10,8 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
-function createRow(id, name, count, price, netPrice) {
-  return { id, name, count, price, netPrice };
+function createRow(id, tableIndex, name, count, price, netPrice) {
+  return { id, tableIndex, name, count, price, netPrice };
 }
 
 export default function OrderTableSimple() {
@@ -46,6 +46,7 @@ export default function OrderTableSimple() {
 
   useEffect(() => {
     createData();
+    console.log(rows);
   }, [data]);
 
   return (
@@ -57,7 +58,7 @@ export default function OrderTableSimple() {
             <TableCell align="right">Позиция</TableCell>
             <TableCell align="right">Количество</TableCell>
             <TableCell align="right">Сумма</TableCell>
-            <TableCell align="right">Чистая прибыль</TableCell>
+            <TableCell align="right">Себестоимость</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
