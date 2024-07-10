@@ -6,10 +6,8 @@ import PropTypes from "prop-types";
 
 import ElementMenuGrid from "./ElementMenuGrid";
 
-import data from "../data";
-
 const MenuItemsGrid = ({ callback, counter }) => {
-  const menu = useSelector((state) => state.menu);
+  const menu = useSelector((state) => state.menu.items);
   return (
     <div className="menu__grid">
       <Grid
@@ -17,17 +15,14 @@ const MenuItemsGrid = ({ callback, counter }) => {
         spacing={1}
         sx={{ marginTop: "10px", marginBottom: "10px" }}
       >
-        {Object.keys(menu.prices).map((key) => (
-          <Grid key={key} item xs={0} md={3}>
+        {Object.keys(menu).map((item) => (
+          <Grid key={menu[item]?.id} item xs={0} md={3}>
             <ElementMenuGrid
-              key={key}
-              image={
-                "https://www.nice-beer.ru/wp-content/uploads/2020/03/cheshskoe-barnoe_keg.jpg"
-              }
-              text={key}
-              price={menu.prices[key]}
+              image={menu[item]?.img}
+              text={menu[item]?.name}
+              price={menu[item]?.price}
               callback={callback}
-              counter={counter[key]}
+              counter={counter[menu[item]?.name] || 0}
             />
           </Grid>
         ))}

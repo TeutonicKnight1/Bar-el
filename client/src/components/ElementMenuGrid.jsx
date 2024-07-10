@@ -6,6 +6,10 @@ import "../styles/index.scss";
 const ElementMenuGrid = ({ text, image, price, counter, callback }) => {
   const [memoCount, setMemoCount] = useState(counter);
 
+  const handleImageError = (e) => {
+    e.target.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMBxhb0K7deiny3Y1FTESaq5B98PDqc-B514viL_LRaMzpEvxOYDN6Zm8_la91vXG8gNI&usqp=CAU";
+  };
+
   useEffect(() => {
     setMemoCount(counter);
   }, [counter]);
@@ -19,7 +23,6 @@ const ElementMenuGrid = ({ text, image, price, counter, callback }) => {
   }
 
   function handleDecrement() {
-    
     setMemoCount((prevCount) => {
       const newCount = prevCount - 1;
       return newCount;
@@ -29,7 +32,7 @@ const ElementMenuGrid = ({ text, image, price, counter, callback }) => {
 
   return (
     <div className="element-menu">
-      <img src={image} alt={text} className="element-menu-img" />
+      <img onError={handleImageError} src={image} alt={text} className="element-menu-img" />
       <div className="element-menu-text">
         <p>{text}</p>
         <p>Цена: {price} руб.</p>

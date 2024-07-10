@@ -31,7 +31,6 @@ const menuSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchMenu.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.status = 'succeeded';
         state.items = action.payload;
       })

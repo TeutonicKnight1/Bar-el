@@ -12,6 +12,9 @@ const ordersRouter = require("express").Router();
 const menuRouter = require("express").Router();
 
 ordersRouter.get("/getAll", ordersController.getAll)
+ordersRouter.get("/getOne/:id", ordersController.getOne)
+ordersRouter.post("/create", ordersController.create)
+ordersRouter.put("/update/:id", ordersController.update)
 
 userRouter.post("/register", usersController.register)
 userRouter.post("/login", usersController.login)

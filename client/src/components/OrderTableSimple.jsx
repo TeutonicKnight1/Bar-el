@@ -15,15 +15,15 @@ function createRow(id, tableIndex, name, count, price, netPrice) {
 }
 
 export default function OrderTableSimple() {
-  const data = useSelector((state) => state.cart.cart);
-  const menu = useSelector((state) => state.menu);
+  const cart = useSelector((state) => state.cart.cart);
+  const menu = useSelector((state) => state.menu.items);
   let [rows, setRows] = useState([]);
 
   function createData() {
     let id = 0;
     const newRows = [];
 
-    data.forEach((item, tableIndex) => {
+    cart.forEach((item, tableIndex) => {
       if (item && Object.keys(item).length > 0) {
         Object.keys(item).forEach((nameKey) => {
           id += 1;
@@ -33,8 +33,8 @@ export default function OrderTableSimple() {
               tableIndex, // Используем исходный индекс как номер стола
               nameKey,
               item[nameKey],
-              menu.prices[nameKey],
-              menu.netPrices[nameKey]
+              menu[nameKey].price,
+              menu[nameKey].net_price
             )
           );
         });
@@ -46,8 +46,7 @@ export default function OrderTableSimple() {
 
   useEffect(() => {
     createData();
-    console.log(rows);
-  }, [data]);
+  }, [cart]);
 
   return (
     <TableContainer component={Paper}>

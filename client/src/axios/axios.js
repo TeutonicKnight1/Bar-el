@@ -38,4 +38,14 @@ export async function userLogin(userlogin, password) {
   }
 }
 
+export async function createOrder(order) {
+  try {
+    const response = await instance.post("/orders/create", order);
+    
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export default instance;
