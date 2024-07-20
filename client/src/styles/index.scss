@@ -1,14 +1,18 @@
 @import 'fonts';
 @import 'colors'; 
 
+@import 'mainPage';
+
 @import 'elementMenuGrid';
+@import 'header';
+@import 'floatingMenu';
 
 * {
     margin: 0;
     padding: 0;
     font-family: 'Montserrat', sans-serif;
     font-size: 18px;
-    color: $black;
+    color: $text-color;
 }
 
 body {
@@ -16,7 +20,7 @@ body {
     box-sizing: border-box;
     width: 70%;
     margin: 0 auto;
-    background-color: $warm-gray;
+    background-color: $dark-gray;
 }
 
 button {

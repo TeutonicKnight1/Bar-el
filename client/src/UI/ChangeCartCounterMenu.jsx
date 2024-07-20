@@ -2,6 +2,8 @@ import styles from './moduleSCSS/addToCartButton.module.scss';
 import plusIcon from "../assets/plusIcon.png";
 import minusIcon from "../assets/minusIcon.png";
 
+import PropTypes from "prop-types";
+
 function ChangeCartCounterMenu({ count, onIncrement, onDecrement }) {
   const handleClickPlus = () => {
     onIncrement();
@@ -33,5 +35,11 @@ function ChangeCartCounterMenu({ count, onIncrement, onDecrement }) {
     </>
   );
 }
+
+ChangeCartCounterMenu.propTypes = {
+  count: PropTypes.number.isRequired,
+  onIncrement: PropTypes.func.isRequired,
+  onDecrement: PropTypes.func.isRequired,
+};
 
 export default ChangeCartCounterMenu;

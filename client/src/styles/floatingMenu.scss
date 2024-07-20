@@ -1,0 +1,56 @@
+.floating-menu {
+  width: 100vw;
+  height: 100vh;
+  background-color: #202020;
+  position: absolute;
+  left: -100vw;
+  top: 0;
+  transition: left 0.75s ease-in-out; /* Плавный переход для свойства left */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .floating-menu-ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .floating-menu-li {
+    width: 100%;
+
+    font-size: 20px;
+    box-shadow: 0 0 $neon-blur-small $neon-red; /* Замените на ваши значения переменных */
+    box-sizing: border-box;
+
+    padding: 10px 0px;
+    margin-bottom: 10px;
+    color: $text-color;
+  }
+
+  .li-settings,
+  .li-orders,
+  .li-main,
+  .span-signout {
+    &-link {
+      font-size: 20px;
+      margin: 0 5px;
+    }
+  }
+
+  .floating-menu-span-signout {
+    width: 100%;
+
+    font-size: 24px;
+    box-shadow: 0 0 $neon-blur-small $neon-red; /* Замените на ваши значения переменных */
+
+    padding: 10px 0;
+    margin-bottom: 20px;
+    color: $text-color;
+  }
+}
+
+.active {
+  left: 0;
+}

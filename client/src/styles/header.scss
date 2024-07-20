@@ -1,0 +1,52 @@
+.header {
+  margin-bottom: 20px;
+
+  height: 40px;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: #202020;
+
+  &-h1 {
+    width: 120px;
+
+    box-sizing: border-box;
+    border: 1px solid white;
+    border-radius: 10px;
+    box-shadow: 0 0 $neon-blur-small $neon-blue,
+      0 0 $neon-blur-small $neon-blue inset;
+
+    padding: 5px 0;
+    text-align: center;
+
+    &-bar {
+      font-size: 23px;
+      display: inline;
+      color: $neon-blue;
+    }
+
+    &-el {
+      font-size: 23px;
+      display: inline;
+      color: $neon-red;
+    }
+  }
+
+  &-button {
+    width: 40px;
+    height: 40px;
+    padding: 7px;
+    border-radius: 10px;
+    background-color: transparent;
+    box-sizing: border-box;
+
+    border: 1px solid white;
+    box-shadow: 0 0 $neon-blur-small $neon-blue,
+      0 0 $neon-blur-small $neon-blue inset;
+  }
+}

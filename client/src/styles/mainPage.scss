@@ -1,0 +1,22 @@
+.main_page {
+  padding: 10px;
+
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+
+  .input_purchase {
+    .cheshskoe_form {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      flex-direction: row;
+      justify-content: flex-start;
+
+      .input_purchase_p {
+        margin-right: 10px;
+        height: 100%;
+      }
+    }
+  }
+}

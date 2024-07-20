@@ -3,19 +3,7 @@
   margin: 0 auto;
 }
 
-.main_page {
-  padding: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-self: center;
-}
 
-.input_purchase {
-  .cheshskoe_form {
-    display: flex;
-    justify-content: start;
-  }
-}
 
 
 

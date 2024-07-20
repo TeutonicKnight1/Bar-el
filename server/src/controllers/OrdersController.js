@@ -21,11 +21,18 @@ class OrdersController {
     }
 
     async update(req, res) {
-        const order = await ordersService.getOne(req.params.id);
-        
-        const result = await ordersService.update(order.id, req.body);
+        try {
+            const orderByTableNumber = await ordersService.getLastOrderByTableNumber(req.body.numberOfTable);
+            if (!orderByTableNumber) {
+                return res.status(404).json({ message: "Order not found for the specified table number" });
+            }
 
-        res.json(result)
+            const result = await ordersService.update(orderByTableNumber.idorder, req.body.order);
+            res.json(result);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Internal server error" });
+        }
     }
 }
 

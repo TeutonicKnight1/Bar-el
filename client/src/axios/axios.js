@@ -48,4 +48,14 @@ export async function createOrder(order) {
   }
 }
 
+export async function updateOrder(numberOfTable, order) {
+  try {
+    const response = await instance.put("/orders/update", {numberOfTable,order});
+    
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export default instance;

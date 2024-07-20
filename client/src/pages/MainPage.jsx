@@ -1,28 +1,32 @@
-import { useEffect, useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 
+import Header from "../components/Header";
 import ChangeCartCounter from "../UI/ChangeCartCounter";
 import MenuItemsGrid from "../components/MenuItemsGrid";
 import OrderTableSimple from "../components/OrderTableSimple";
+import FloatingMenu from "../components/FloatingMenu";
 
 //import { getMenu, getOrders, userLogin } from "./axios/axios";
-import { createOrder } from "../axios/axios";
+import { createOrder, updateOrder } from "../axios/axios";
 
 import { addToCart } from "../store/cartSlice";
 import { nullification, increment, decrement } from "../store/counterSlice";
+import { toast } from "react-toastify";
 
 function orderRow(numbersOfTable, ordersBody, menu) {
-  const currentDate = new Date(); // Создаем объект Date с текущей датой и временем
-  // Преобразуем дату в формат DATETIME, который будет понятен серверу
+  const currentDate = new Date();
   const createdAt = currentDate.toISOString().slice(0, 19).replace("T", " ");
 
   let receipt = 0;
+
   Object.keys(ordersBody).forEach((key) => {
     receipt += menu[key].price * ordersBody[key];
   });
 
   let netProfit = 0;
+
   Object.keys(ordersBody).forEach((key) => {
     netProfit +=
       menu[key].price * ordersBody[key] - menu[key].net_price * ordersBody[key];
@@ -31,6 +35,57 @@ function orderRow(numbersOfTable, ordersBody, menu) {
   return {
     tableNumber: numbersOfTable,
     ordersBody,
+    receipt,
+    netProfit,
+    createdAt,
+  };
+}
+
+function updateOrdersBody(numbersOfTable, ordersBody, cart, menu) {
+  let netProfit = 0;
+  let receipt = 0;
+  const combined = {};
+
+  const currentDate = new Date();
+
+  for (const key in cart[numbersOfTable]) {
+    if (Object.prototype.hasOwnProperty.call(cart[numbersOfTable], key)) {
+      combined[key] = cart[numbersOfTable][key];
+    }
+  }
+
+  for (const key in ordersBody) {
+    if (Object.prototype.hasOwnProperty.call(ordersBody, key)) {
+      if (Object.prototype.hasOwnProperty.call(combined, key)) {
+        combined[key] += ordersBody[key];
+      } else {
+        combined[key] = ordersBody[key];
+      }
+    }
+  }
+
+  Object.keys(combined).forEach((key) => {
+    if (combined[key] === 0) {
+      delete combined[key];
+    }
+  });
+
+  console.log(combined);
+
+  const createdAt = currentDate.toISOString().slice(0, 19).replace("T", " ");
+
+  Object.keys(combined).forEach((key) => {
+    receipt += menu[key].price * combined[key];
+  });
+
+  Object.keys(combined).forEach((key) => {
+    netProfit +=
+      menu[key].price * combined[key] - menu[key].net_price * combined[key];
+  });
+
+  return {
+    tableNumber: numbersOfTable,
+    ordersBody: combined,
     receipt,
     netProfit,
     createdAt,
@@ -46,6 +101,8 @@ const MainPage = () => {
   const [finalProfit, setFinalProfit] = useState([0, 0]);
   const [numberOfTable, setNumberOfTable] = useState(1);
 
+  const [statusFloatingMenu, setStatusFloatingMenu] = useState(false);
+
   const [counter, setCounter] = useState(() => {
     let obj = {};
     Object.keys(menu).forEach((key) => {
@@ -54,31 +111,35 @@ const MainPage = () => {
     return obj;
   });
 
-  const handleCounter = (key, action) => {
-    let newCounter = {};
+  const handleCounter = useCallback((key, action) => {
     setCounter((prevCounters) => {
+      const newCounter = { ...prevCounters };
       if (action === "increment") {
-        newCounter = { ...prevCounters, [key]: prevCounters[key] + 1 };
-        dispatch(increment({ key }));
+        newCounter[key] = prevCounters[key] + 1;
+        dispatch(increment( key ));
       } else if (action === "decrement") {
-        newCounter = { ...prevCounters, [key]: prevCounters[key] - 1 };
-        dispatch(decrement({ key }));
+        newCounter[key] = prevCounters[key] - 1;
+        dispatch(decrement( key ));
       }
       return newCounter;
     });
-  };
+  }, [dispatch]);
 
-  function nullificationCounter() {
+  const nullificationCounter = useCallback(() => {
     setCounter(() => {
       let obj = {};
       Object.keys(menu).forEach((key) => {
-        obj[key.price] = 0;
+        obj[menu[key].name] = 0;
       });
       return obj;
     });
-  }
+  }, [menu]);
 
-  useEffect(() => {
+  const handleFloatingMenu = useCallback(() => {
+    setStatusFloatingMenu(!statusFloatingMenu);
+  }, [statusFloatingMenu]);
+
+  const calculatedFinalProfit = useMemo(() => {
     let sumPrices = 0;
     let sumNetPrices = 0;
 
@@ -90,31 +151,57 @@ const MainPage = () => {
     });
     sumNetPrices = sumPrices - sumNetPrices;
 
-    setFinalProfit([sumPrices, sumNetPrices]);
+    return [sumPrices, sumNetPrices];
   }, [cart, menu]);
 
-  function handleAddToCart() {
-    if (!cart[numberOfTable]) {
-      createOrder(orderRow(numberOfTable, countPoints, menu));
-    } else {
-      alert("Заказ для этого стола уже сформирован!");
-    }
-
+  const handleAddToCart = useCallback(() => {
     dispatch(addToCart({ keysForUpdate: countPoints, numberOfTable }));
+    setFinalProfit(calculatedFinalProfit);
     dispatch(nullification());
     nullificationCounter();
-
     
-  }
+
+    if (!cart[numberOfTable]) {
+      createOrder(orderRow(numberOfTable, countPoints, menu));
+
+      toast.success("Заказ успешно создан", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+
+
+    } else {
+      updateOrder(
+        numberOfTable,
+        updateOrdersBody(numberOfTable, countPoints, cart, menu)
+      );
+
+      toast.success("Заказ успешно обновлен", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  },[calculatedFinalProfit, countPoints, numberOfTable, cart, menu, dispatch, nullificationCounter]);
 
   return (
     <div>
       <div className="main_page">
+        <Header floatingMenuCallback={handleFloatingMenu} />
         <div className="input_purchase">
           <div className="cheshskoe_form">
-            <Typography variant="h4" gutterBottom>
-              Стол номер:
-            </Typography>
+            <p className="input_purchase_p">Номер стола:</p>
             <ChangeCartCounter
               count={numberOfTable}
               callback={setNumberOfTable}
@@ -131,6 +218,8 @@ const MainPage = () => {
         <h1>Итоговый доход:{finalProfit[0]}</h1>
         <h1>Итоговая прибыль:{finalProfit[1]}</h1>
       </div>
+
+      <FloatingMenu statusFloating={statusFloatingMenu} callback={handleFloatingMenu} />
     </div>
   );
 };

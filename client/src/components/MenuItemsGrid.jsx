@@ -14,15 +14,16 @@ const MenuItemsGrid = ({ callback, counter }) => {
         container
         spacing={1}
         sx={{ marginTop: "10px", marginBottom: "10px" }}
+        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
       >
         {Object.keys(menu).map((item) => (
-          <Grid key={menu[item]?.id} item xs={0} md={3}>
+          <Grid key={menu[item].id} item xs={6} md={3}>
             <ElementMenuGrid
-              image={menu[item]?.img}
-              text={menu[item]?.name}
-              price={menu[item]?.price}
+              image={menu[item].img}
+              text={menu[item].name}
+              price={menu[item].price}
               callback={callback}
-              counter={counter[menu[item]?.name] || 0}
+              counter={counter[item]}
             />
           </Grid>
         ))}
