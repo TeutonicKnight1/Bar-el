@@ -14,52 +14,40 @@ import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
-function createData(name, calories, fat, carbs, protein, price) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      {
-        date: "2020-01-05",
-        customerId: "11091700",
-        amount: 3,
-      },
-      {
-        date: "2020-01-02",
-        customerId: "Anonymous",
-        amount: 1,
-      },
-    ],
-  };
-}
+import { useSelector } from "react-redux";
 
-function createData1(
-  orderId,
-  numberOfTable,
-  recipt,
+function createData(
+  idOrder,
+  tableNumber,
+  receipt,
   netProfit,
   date,
-  nameOfPosition,
-  positionPrice,
-  positionCount,
-  positionNetProfit
+  ordersBody,
+  menu
 ) {
+  let orderBody = [];
+  let id = 0;
+
+  Object.keys(ordersBody).forEach((key) => {
+    orderBody.push({
+      id: ++id,
+      nameOfPosition: key,
+      positionPrice: menu[key].price,
+      positionCount: ordersBody[key],
+      positionNetProfit: menu[key].net_price,
+    });
+  });
+
+  let dateFormat = {date: date.slice(0, 10), time: date.slice(11, 19)};
+  dateFormat = dateFormat.date + " " + dateFormat.time;
+
   return {
-    orderId,
-    numberOfTable,
-    recipt,
+    idOrder,
+    tableNumber,
+    receipt,
     netProfit,
-    date,
-    orderBody: {
-      nameOfPosition,
-      positionPrice,
-      positionCount,
-      positionNetProfit,
-    },
+    date: dateFormat,
+    orderBody
   };
 }
 
@@ -80,12 +68,12 @@ function Row({ row }) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.name}
+          {row.idOrder}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell>
+        <TableCell align="right">{row.tableNumber}</TableCell>
+        <TableCell align="right">{row.receipt}</TableCell>
+        <TableCell align="right">{row.netProfit}</TableCell>
+        <TableCell align="right">{row.date}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -94,25 +82,25 @@ function Row({ row }) {
               <Typography variant="h6" gutterBottom component="div">
                 Заказ
               </Typography>
-              <Table size="small" aria-label="purchases">
+              <Table size="small" aria-label="orders">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Название позиции</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Название позиции</TableCell>
                     <TableCell>Количество</TableCell>
                     <TableCell align="right">Сумма</TableCell>
                     <TableCell align="right">Чистая прибыль</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
+                  {row.orderBody.map((order) => (
+                    <TableRow key={order.id}>
                       <TableCell component="th" scope="row">
-                        {historyRow.date}
+                        {order.nameOfPosition}
                       </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
+                      <TableCell>{order.positionCount}</TableCell>
+                      <TableCell align="right">{order.positionPrice}</TableCell>
                       <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
+                        {Math.round(order.positionPrice - order.positionNetProfit)}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -128,31 +116,31 @@ function Row({ row }) {
 
 Row.propTypes = {
   row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
+    idOrder: PropTypes.number.isRequired,
+    tableNumber: PropTypes.string.isRequired,
+    receipt: PropTypes.number.isRequired,
+    netProfit: PropTypes.number.isRequired,
+    date: PropTypes.string.isRequired,
+    orderBody: PropTypes.array.isRequired,
   }).isRequired,
 };
 
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0, 3.99),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3, 4.99),
-  createData("Eclair", 262, 16.0, 24, 6.0, 3.79),
-  createData("Cupcake", 305, 3.7, 67, 4.3, 2.5),
-  createData("Gingerbread", 356, 16.0, 49, 3.9, 1.5),
-];
-
 export default function CollapsibleTable() {
+  const orders = useSelector((state) => state.activeOrders.orders);
+  const menu = useSelector((state) => state.menu.items);
+
+  const rows = orders.map((order) => {
+    return createData(
+      order.idorder,
+      order.tableNumber,
+      order.receipt,
+      order.netProfit,
+      order.createdAt,
+      JSON.parse(order.ordersBody),
+      menu
+    );
+  });
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -168,7 +156,7 @@ export default function CollapsibleTable() {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <Row key={row.name} row={row} />
+            <Row key={row.idOrder} row={row} />
           ))}
         </TableBody>
       </Table>

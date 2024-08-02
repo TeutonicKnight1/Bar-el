@@ -1,8 +1,12 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8080",
-  timeout: 5000, // время ожидания запроса
+  baseURL: "http://45.12.239.119:8080/",
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  withCredentials: true,
+  timeout: 5000,
 });
 
 export async function getMenu() {

@@ -17,10 +17,16 @@ import { toast } from "react-toastify";
 
 function orderRow(numbersOfTable, ordersBody, menu) {
   const currentDate = new Date();
+  const utcTime = currentDate.getTime(); // Получаем текущее время в формате UTC в миллисекундах
+  const offset = 8 * 60 * 60 * 1000; // Поправка на часовой пояс +8 часа в миллисекундах
+  const adjustedTime = utcTime + offset;
+  currentDate.setTime(adjustedTime);
+
   const createdAt = currentDate.toISOString().slice(0, 19).replace("T", " ");
 
   let receipt = 0;
 
+  console.log(menu, ordersBody);
   Object.keys(ordersBody).forEach((key) => {
     receipt += menu[key].price * ordersBody[key];
   });
@@ -111,19 +117,22 @@ const MainPage = () => {
     return obj;
   });
 
-  const handleCounter = useCallback((key, action) => {
-    setCounter((prevCounters) => {
-      const newCounter = { ...prevCounters };
-      if (action === "increment") {
-        newCounter[key] = prevCounters[key] + 1;
-        dispatch(increment( key ));
-      } else if (action === "decrement") {
-        newCounter[key] = prevCounters[key] - 1;
-        dispatch(decrement( key ));
-      }
-      return newCounter;
-    });
-  }, [dispatch]);
+  const handleCounter = useCallback(
+    (nameKey, action) => {
+      setCounter((prevCounters) => {
+        const newCounter = { ...prevCounters };
+        if (action === "increment") {
+          newCounter[nameKey] = prevCounters[nameKey] + 1;
+          dispatch(increment({ key: nameKey }));
+        } else if (action === "decrement") {
+          newCounter[nameKey] = prevCounters[nameKey] - 1;
+          dispatch(decrement({ key: nameKey }));
+        }
+        return newCounter;
+      });
+    },
+    [dispatch]
+  );
 
   const nullificationCounter = useCallback(() => {
     setCounter(() => {
@@ -145,6 +154,7 @@ const MainPage = () => {
 
     Object.keys(cart).forEach((key) => {
       Object.keys(cart[key]).forEach((key2) => {
+        console.log(sumPrices, sumNetPrices);
         sumPrices += cart[key][key2] * menu[key2].price;
         sumNetPrices += cart[key][key2] * menu[key2].net_price;
       });
@@ -159,7 +169,6 @@ const MainPage = () => {
     setFinalProfit(calculatedFinalProfit);
     dispatch(nullification());
     nullificationCounter();
-    
 
     if (!cart[numberOfTable]) {
       createOrder(orderRow(numberOfTable, countPoints, menu));
@@ -174,8 +183,6 @@ const MainPage = () => {
         progress: undefined,
         theme: "dark",
       });
-
-
     } else {
       updateOrder(
         numberOfTable,
@@ -193,7 +200,15 @@ const MainPage = () => {
         theme: "dark",
       });
     }
-  },[calculatedFinalProfit, countPoints, numberOfTable, cart, menu, dispatch, nullificationCounter]);
+  }, [
+    calculatedFinalProfit,
+    countPoints,
+    numberOfTable,
+    cart,
+    menu,
+    dispatch,
+    nullificationCounter,
+  ]);
 
   return (
     <div>
@@ -219,7 +234,10 @@ const MainPage = () => {
         <h1>Итоговая прибыль:{finalProfit[1]}</h1>
       </div>
 
-      <FloatingMenu statusFloating={statusFloatingMenu} callback={handleFloatingMenu} />
+      <FloatingMenu
+        statusFloating={statusFloatingMenu}
+        callback={handleFloatingMenu}
+      />
     </div>
   );
 };

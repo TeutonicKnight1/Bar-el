@@ -14,6 +14,7 @@ const counterSlice = createSlice({
 
     increment: (state, action) => {
       const pointKey = action.payload.key;
+      console.log(pointKey);
 
       if (state.points[pointKey]) {
         state.points[pointKey] = state.points[pointKey] + 1;

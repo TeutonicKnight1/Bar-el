@@ -4,12 +4,14 @@ import "./App.css";
 
 
 import { fetchMenu } from "./store/menuSlice";
+import { fetchOrders } from "./store/activeOrdersSlice";
 import MainPage from "./pages/MainPage";
 
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchMenu());
+    dispatch(fetchOrders());
   }, [dispatch]);
 
 
