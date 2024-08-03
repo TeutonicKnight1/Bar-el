@@ -2,11 +2,9 @@ import { useState, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 
-import Header from "../components/Header";
 import ChangeCartCounter from "../UI/ChangeCartCounter";
 import MenuItemsGrid from "../components/MenuItemsGrid";
 import OrderTableSimple from "../components/OrderTableSimple";
-import FloatingMenu from "../components/FloatingMenu";
 
 //import { getMenu, getOrders, userLogin } from "./axios/axios";
 import { createOrder, updateOrder } from "../axios/axios";
@@ -107,7 +105,7 @@ const MainPage = () => {
   const [finalProfit, setFinalProfit] = useState([0, 0]);
   const [numberOfTable, setNumberOfTable] = useState(1);
 
-  const [statusFloatingMenu, setStatusFloatingMenu] = useState(false);
+  
 
   const [counter, setCounter] = useState(() => {
     let obj = {};
@@ -143,10 +141,6 @@ const MainPage = () => {
       return obj;
     });
   }, [menu]);
-
-  const handleFloatingMenu = useCallback(() => {
-    setStatusFloatingMenu(!statusFloatingMenu);
-  }, [statusFloatingMenu]);
 
   const calculatedFinalProfit = useMemo(() => {
     let sumPrices = 0;
@@ -213,7 +207,6 @@ const MainPage = () => {
   return (
     <div>
       <div className="main_page">
-        <Header floatingMenuCallback={handleFloatingMenu} />
         <div className="input_purchase">
           <div className="cheshskoe_form">
             <p className="input_purchase_p">Номер стола:</p>
@@ -233,11 +226,6 @@ const MainPage = () => {
         <h1>Итоговый доход:{finalProfit[0]}</h1>
         <h1>Итоговая прибыль:{finalProfit[1]}</h1>
       </div>
-
-      <FloatingMenu
-        statusFloating={statusFloatingMenu}
-        callback={handleFloatingMenu}
-      />
     </div>
   );
 };

@@ -17,7 +17,7 @@ const MenuItemsGrid = ({ callback, counter }) => {
         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
       >
         {Object.keys(menu).map((item) => (
-          <Grid key={menu[item].id} item xs={6} md={3}>
+          <Grid key={menu[item].id} item xs={6} md={3} sx={{ display: "flex" }}>
             <ElementMenuGrid
               image={menu[item].img}
               text={menu[item].name}

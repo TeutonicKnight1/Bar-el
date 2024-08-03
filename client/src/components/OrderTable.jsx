@@ -28,7 +28,7 @@ function createData(
   let orderBody = [];
   let id = 0;
 
-  Object.keys(ordersBody).forEach((key) => {
+  Object.keys(ordersBody).reverse().forEach((key) => {
     orderBody.push({
       id: ++id,
       nameOfPosition: key,

@@ -48,6 +48,7 @@ class UsersService {
         );
 
         return {
+            status: 200,
             token,
         };
     }

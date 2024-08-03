@@ -1,0 +1,25 @@
+.sign_log_in {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 60vh;
+
+    &_form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        width: 245px;
+
+        &_label {
+            margin-bottom: 10px;
+        }
+
+        &_input {
+            margin-bottom: 10px;
+
+            color: black;
+        }
+    }
+}

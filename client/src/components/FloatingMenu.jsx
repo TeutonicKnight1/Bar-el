@@ -12,7 +12,7 @@ const FloatingMenu = ({ statusFloating, callback }) => {
           </Link>
         </li>
         <li className="floating-menu-li li-orders">
-          <Link to="/orders" className="li-orders-link">
+          <Link to="/orders" className="li-orders-link" onClick={callback}>
             Заказы
           </Link>
         </li>

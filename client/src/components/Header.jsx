@@ -2,6 +2,7 @@ import menuIcon from "../assets/menuIcon.png";
 import accountIcon from "../assets/accountIcon.png";
 
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 
 const Header = ({floatingMenuCallback}) => {
@@ -17,9 +18,10 @@ const Header = ({floatingMenuCallback}) => {
         </button>
       <h1 className="header-h1">
         <p className="header-h1-bar">Bar</p>
-        <p className="header-h1-el">'el</p>
+        <p className="header-h1-el" >&#39;эль</p>
       </h1>
-      <button className="header-button">
+      {/* <Link to="/user" className="header-button"> */}
+      <button className="header-button" >
         <img src={accountIcon} className="header-img" />
       </button>
     </header>
