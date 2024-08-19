@@ -4,7 +4,6 @@ const OrdersPage = () => {
 
     return (
         <div className="orders_page">
-
             <OrderTable/>
         </div>
     )

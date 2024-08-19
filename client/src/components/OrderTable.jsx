@@ -15,6 +15,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 import { useSelector } from "react-redux";
+import { Button, Checkbox } from "@mui/material";
 
 function createData(
   idOrder,
@@ -28,7 +29,7 @@ function createData(
   let orderBody = [];
   let id = 0;
 
-  Object.keys(ordersBody).reverse().forEach((key) => {
+  Object.keys(ordersBody).forEach((key) => {
     orderBody.push({
       id: ++id,
       nameOfPosition: key,
@@ -57,6 +58,9 @@ function Row({ row }) {
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        <TableCell>
+          <Checkbox sx={{ backgroundColor: "#202020", '& .Mui-checked': {backgroundColor: 'green'}}}/>
+        </TableCell>
         <TableCell>
           <IconButton
             aria-label="Раскрыть строку"
@@ -129,7 +133,7 @@ export default function CollapsibleTable() {
   const orders = useSelector((state) => state.activeOrders.orders);
   const menu = useSelector((state) => state.menu.items);
 
-  const rows = orders.map((order) => {
+  const rows = orders.slice().reverse().map((order) => {
     return createData(
       order.idorder,
       order.tableNumber,

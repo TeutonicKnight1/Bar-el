@@ -1,11 +1,12 @@
 .floating-menu {
   width: 100vw;
+  max-width: 425px;
   height: 100vh;
   background-color: #202020;
   position: absolute;
-  left: -100vw;
+  left: -425px;
   top: 0;
-  transition: left 0.75s ease-in-out; /* Плавный переход для свойства left */
+  transition: left 0.75s ease-in-out;
 
   display: flex;
   flex-direction: column;
@@ -21,7 +22,7 @@
     width: 100%;
 
     font-size: 20px;
-    box-shadow: 0 0 $neon-blur-small $neon-red; /* Замените на ваши значения переменных */
+    box-shadow: 0 0 $neon-blur-small $neon-red;
     box-sizing: border-box;
 
     padding: 10px 0px;

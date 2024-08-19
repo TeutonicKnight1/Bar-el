@@ -6,7 +6,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
@@ -81,6 +80,3 @@ export default function OrderTableSimple() {
   );
 }
 
-OrderTableSimple.propTypes = {
-  rows: PropTypes.array,
-};
