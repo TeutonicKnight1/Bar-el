@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
@@ -14,52 +14,25 @@ import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
-import { useSelector } from "react-redux";
-import { Button, Checkbox } from "@mui/material";
+import { Checkbox } from "@mui/material";
 
-function createData(
-  idOrder,
-  tableNumber,
-  receipt,
-  netProfit,
-  date,
-  ordersBody,
-  menu
-) {
-  let orderBody = [];
-  let id = 0;
 
-  Object.keys(ordersBody).forEach((key) => {
-    orderBody.push({
-      id: ++id,
-      nameOfPosition: key,
-      positionPrice: menu[key].price,
-      positionCount: ordersBody[key],
-      positionNetProfit: menu[key].net_price,
-    });
-  });
 
-  let dateFormat = {date: date.slice(0, 10), time: date.slice(11, 19)};
-  dateFormat = dateFormat.date + " " + dateFormat.time;
-
-  return {
-    idOrder,
-    tableNumber,
-    receipt,
-    netProfit,
-    date: dateFormat,
-    orderBody
-  };
-}
 
 function Row({ row }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
-    <React.Fragment>
+    <>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>
-          <Checkbox sx={{ backgroundColor: "#202020", '& .Mui-checked': {backgroundColor: 'green'}}}/>
+          <Checkbox
+            onChange={() => console.log(row.idOrder)}
+            sx={{
+              backgroundColor: "#202020",
+              "& .Mui-checked": { backgroundColor: "green" },
+            }}
+          />
         </TableCell>
         <TableCell>
           <IconButton
@@ -89,7 +62,9 @@ function Row({ row }) {
               <Table size="small" aria-label="orders">
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Название позиции</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
+                      Название позиции
+                    </TableCell>
                     <TableCell>Количество</TableCell>
                     <TableCell align="right">Сумма</TableCell>
                     <TableCell align="right">Чистая прибыль</TableCell>
@@ -104,7 +79,9 @@ function Row({ row }) {
                       <TableCell>{order.positionCount}</TableCell>
                       <TableCell align="right">{order.positionPrice}</TableCell>
                       <TableCell align="right">
-                        {Math.round(order.positionPrice - order.positionNetProfit)}
+                        {Math.round(
+                          order.positionPrice - order.positionNetProfit
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -114,7 +91,7 @@ function Row({ row }) {
           </Collapse>
         </TableCell>
       </TableRow>
-    </React.Fragment>
+    </>
   );
 }
 
@@ -129,27 +106,13 @@ Row.propTypes = {
   }).isRequired,
 };
 
-export default function CollapsibleTable() {
-  const orders = useSelector((state) => state.activeOrders.orders);
-  const menu = useSelector((state) => state.menu.items);
-
-  const rows = orders.slice().reverse().map((order) => {
-    return createData(
-      order.idorder,
-      order.tableNumber,
-      order.receipt,
-      order.netProfit,
-      order.createdAt,
-      JSON.parse(order.ordersBody),
-      menu
-    );
-  });
-
+export default function CollapsibleTable({ rows }) {
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
+            <TableCell />
             <TableCell />
             <TableCell>Номер заказа</TableCell>
             <TableCell align="right">Номер стола</TableCell>
@@ -167,3 +130,7 @@ export default function CollapsibleTable() {
     </TableContainer>
   );
 }
+
+CollapsibleTable.propTypes = {
+  rows: PropTypes.array.isRequired,
+};

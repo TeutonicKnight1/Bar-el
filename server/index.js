@@ -10,7 +10,21 @@ const config = require("./config");
 
 const { port } = config;
 
-app.use(cors());
+const allowedOrigins = ['http://45.12.239.119:3000', 'http://localhost:5173'];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: 'GET,POST,PUT,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type,Authorization',
+  credentials: true // Разрешить отправку учетных данных
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
